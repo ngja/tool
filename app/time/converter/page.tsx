@@ -340,7 +340,12 @@ export default function TimeConverter() {
           </CardHeader>
           <CardContent>
             <div className="space-y-3 max-h-[700px] overflow-y-auto">
-              {timeFormats.map((format) => (
+              {!mounted ? (
+                <div className="text-center text-muted-foreground py-8">
+                  로딩 중...
+                </div>
+              ) : (
+                timeFormats.map((format) => (
                 <div
                   key={format.label}
                   className="group relative overflow-hidden bg-muted/30 border rounded-lg p-3 transition-all hover:shadow-sm hover:bg-muted/50"
@@ -403,7 +408,8 @@ export default function TimeConverter() {
                     </div>
                   )}
                 </div>
-              ))}
+                ))
+              )}
             </div>
           </CardContent>
         </Card>

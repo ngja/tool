@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/breadcrumb"
 import { Menu, Slash } from "lucide-react"
 import Link from "next/link";
+import {Fragment} from "react";
 
 export function Header() {
   const pathname = usePathname()
@@ -46,28 +47,24 @@ export function Header() {
           <SidebarTrigger className="ml-2">
             <Menu className="h-4 w-4" />
           </SidebarTrigger>
-
           <div className="h-6 w-px bg-border" />
-
           <Breadcrumb>
             <BreadcrumbList>
               {breadcrumbs.map((crumb, index) => (
-                <>
+                <Fragment key={crumb.href}>
                   {index > 0 && (
                     <BreadcrumbSeparator />
                   )}
-                  <BreadcrumbItem key={crumb.href} className="flex items-center">
+                  <BreadcrumbItem className="flex items-center">
                     {crumb.isLast ? (
                       <BreadcrumbPage>{crumb.label}</BreadcrumbPage>
                     ) : (
-                      <BreadcrumbLink>
-                        <Link href={crumb.href}>
-                          {crumb.label}
-                        </Link>
+                      <BreadcrumbLink href={crumb.href}>
+                        {crumb.label}
                       </BreadcrumbLink>
                     )}
                   </BreadcrumbItem>
-                </>
+                </Fragment>
               ))}
             </BreadcrumbList>
           </Breadcrumb>
