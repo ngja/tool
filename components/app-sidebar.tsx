@@ -39,6 +39,10 @@ const items: MenuItem[] = [
     icon: Clock,
     items: [
       {
+        title: "Timer",
+        url: "/time/timer",
+      },
+      {
         title: "Time Converter",
         url: "/time/converter",
       },
