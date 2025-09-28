@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Clock, Braces, ChevronRight, Wrench } from "lucide-react"
+import { Clock, Braces, ChevronRight, Wrench, Type } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -58,6 +58,20 @@ const items: MenuItem[] = [
       },
     ],
   },
+  {
+    title: "String",
+    icon: Type,
+    items: [
+      {
+        title: "Newline",
+        url: "/string/newline",
+      },
+      {
+        title: "Regex",
+        url: "/string/regex",
+      },
+    ],
+  },
 ]
 
 export function AppSidebar() {
@@ -65,6 +79,7 @@ export function AppSidebar() {
   const [openDropdowns, setOpenDropdowns] = useState<Record<string, boolean>>({
     Time: true,
     JSON: true,
+    String: true,
   })
 
   const toggleDropdown = (title: string) => {
