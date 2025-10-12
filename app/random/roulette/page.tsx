@@ -161,7 +161,7 @@ export default function RoulettePage() {
 
       <Separator />
 
-      <div className="max-w-4xl mx-auto space-y-6">
+      <div className="max-w-4xl space-y-6">
         {/* Roulette Wheel */}
         <Card>
           <CardHeader className="text-center">

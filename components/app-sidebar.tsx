@@ -80,6 +80,10 @@ const items: MenuItem[] = [
         title: "Roulette",
         url: "/random/roulette",
       },
+      {
+        title: "Lotto",
+        url: "/random/lotto",
+      },
     ],
   },
 ]
