@@ -70,6 +70,10 @@ const items: MenuItem[] = [
         title: "Regex",
         url: "/string/regex",
       },
+      {
+        title: "Manipulator",
+        url: "/string/manipulator",
+      },
     ],
   },
   {
