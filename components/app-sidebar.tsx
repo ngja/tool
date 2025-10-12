@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Clock, Braces, ChevronRight, Wrench, Type } from "lucide-react"
+import { Clock, Braces, ChevronRight, Wrench, Type, Dices } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -72,6 +72,16 @@ const items: MenuItem[] = [
       },
     ],
   },
+  {
+    title: "Random",
+    icon: Dices,
+    items: [
+      {
+        title: "Roulette",
+        url: "/random/roulette",
+      },
+    ],
+  },
 ]
 
 export function AppSidebar() {
@@ -80,6 +90,7 @@ export function AppSidebar() {
     Time: true,
     JSON: true,
     String: true,
+    Random: true,
   })
 
   const toggleDropdown = (title: string) => {
