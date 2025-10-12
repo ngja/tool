@@ -74,6 +74,10 @@ const items: MenuItem[] = [
         title: "Manipulator",
         url: "/string/manipulator",
       },
+      {
+        title: "Extractor",
+        url: "/string/extractor",
+      },
     ],
   },
   {
