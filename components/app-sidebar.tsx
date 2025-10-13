@@ -56,6 +56,10 @@ const items: MenuItem[] = [
         title: "JSON Formatter",
         url: "/json/formatter",
       },
+      {
+        title: "JSON Converter",
+        url: "/json/converter",
+      },
     ],
   },
   {
