@@ -78,6 +78,10 @@ const items: MenuItem[] = [
         title: "Extractor",
         url: "/string/extractor",
       },
+      {
+        title: "Set Operations",
+        url: "/string/set-operations",
+      },
     ],
   },
   {
