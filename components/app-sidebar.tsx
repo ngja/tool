@@ -110,6 +110,10 @@ const items: MenuItem[] = [
         title: "Sort",
         url: "/computer/sort",
       },
+      {
+        title: "Encoding",
+        url: "/computer/encoding",
+      },
     ],
   },
 ]
