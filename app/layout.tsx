@@ -5,6 +5,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { Header } from "@/components/header";
 import { ThemeProvider } from "@/components/theme-provider";
+import { SearchProvider, SearchDialog } from "@/components/search-dialog";
 import React from "react";
 
 const geistSans = Geist({
@@ -38,15 +39,18 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <SidebarProvider>
-            <AppSidebar />
-            <div className="flex flex-1 flex-col overflow-hidden">
-              <Header />
-              <main className="flex-1 overflow-y-auto p-6">
-                {children}
-              </main>
-            </div>
-          </SidebarProvider>
+          <SearchProvider>
+            <SidebarProvider>
+              <AppSidebar />
+              <div className="flex flex-1 flex-col overflow-hidden">
+                <Header />
+                <main className="flex-1 overflow-y-auto p-6">
+                  {children}
+                </main>
+              </div>
+            </SidebarProvider>
+            <SearchDialog />
+          </SearchProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -165,7 +165,7 @@ export default function Home() {
       {/* Stats */}
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
-          <CardHeader className="pb-3">
+          <CardHeader>
             <CardTitle className="text-sm font-medium text-muted-foreground">
               전체 카테고리
             </CardTitle>
@@ -175,7 +175,7 @@ export default function Home() {
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="pb-3">
+          <CardHeader>
             <CardTitle className="text-sm font-medium text-muted-foreground">
               사용 가능한 도구
             </CardTitle>
@@ -185,7 +185,7 @@ export default function Home() {
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="pb-3">
+          <CardHeader>
             <CardTitle className="text-sm font-medium text-muted-foreground">
               상태
             </CardTitle>
