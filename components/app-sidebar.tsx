@@ -118,6 +118,10 @@ const items: MenuItem[] = [
         title: "Encoding",
         url: "/computer/encoding",
       },
+      {
+        title: "Base Converter",
+        url: "/computer/base-converter",
+      },
     ],
   },
 ]
