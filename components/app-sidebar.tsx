@@ -67,6 +67,10 @@ const items: MenuItem[] = [
     icon: Type,
     items: [
       {
+        title: "Case",
+        url: "/string/case",
+      },
+      {
         title: "Newline",
         url: "/string/newline",
       },
