@@ -126,6 +126,10 @@ const items: MenuItem[] = [
         title: "Base Converter",
         url: "/computer/base-converter",
       },
+      {
+        title: "CIDR",
+        url: "/computer/cidr",
+      },
     ],
   },
 ]
