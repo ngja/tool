@@ -46,6 +46,10 @@ const items: MenuItem[] = [
         title: "Time Converter",
         url: "/time/converter",
       },
+      {
+        title: "Cron",
+        url: "/time/cron",
+      },
     ],
   },
   {
