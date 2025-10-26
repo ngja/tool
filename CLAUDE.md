@@ -2,10 +2,6 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## 확인사항
-
-- npm run dev 커맨드를 사용해서 확인해볼 필요 없음
-
 ## Project Overview
 
 This is a Next.js 15.5.4 application using React 19 and TypeScript, configured with Turbopack for enhanced development performance. The project is a developer utility app that provides various tools including JSON formatting, time conversion, and timer functionality. The UI is built with Tailwind CSS v4 and shadcn/ui components.
@@ -21,15 +17,41 @@ This is a Next.js 15.5.4 application using React 19 and TypeScript, configured w
 ### Project Structure
 - **App Router**: Uses Next.js App Router with `app/` directory structure
 - **Layout**: Root layout with Geist fonts, dark mode support, and sidebar navigation
-- **Tool Pages**: Individual pages for each utility tool under `/time/`, `/json/` routes
+- **Tool Pages**: Individual pages for each utility tool under `/time/`, `/json/`, `/string/`, `/random/`, `/computer/` routes
 - **Components**: Modular UI components with shadcn/ui system
 - **Utilities**: Central utility functions in `lib/utils.ts`
+- **Dashboard**: Main landing page (`/`) with tool overview and quick navigation
 
 ### Application Features
-The application provides developer utility tools:
-1. **JSON Formatter** (`/json/formatter`): JSON validation, formatting, and error detection with Korean interface
-2. **Timer** (`/time/timer`): Countdown timer with notifications, preset times, and visual feedback
-3. **Time Converter** (`/time/converter`): Multi-format time conversion with timezone support
+The application provides developer utility tools across 5 main categories:
+
+#### Time Tools
+1. **Timer** (`/time/timer`): Countdown timer with notifications, preset times, and visual feedback
+2. **Time Converter** (`/time/converter`): Multi-format time conversion with timezone support
+3. **Cron** (`/time/cron`): Cron expression generator and validator
+
+#### JSON Tools
+4. **JSON Formatter** (`/json/formatter`): JSON validation, formatting, and error detection with Korean interface
+5. **JSON Converter** (`/json/converter`): Convert JSON to various formats
+
+#### String Tools
+6. **Case** (`/string/case`): Convert text between different case styles (camelCase, snake_case, etc.)
+7. **Newline** (`/string/newline`): Convert line endings and handle newline characters
+8. **Regex** (`/string/regex`): Regular expression tester with real-time matching
+9. **Manipulator** (`/string/manipulator`): String manipulation tools (trim, reverse, etc.)
+10. **Extractor** (`/string/extractor`): Extract specific patterns from text
+11. **Unique** (`/string/unique`): Remove duplicates, count occurrences, and display statistics with visual progress bars
+12. **Set Operations** (`/string/set-operations`): Perform set operations (union, intersection, difference) on text sets
+
+#### Random Tools
+13. **Roulette** (`/random/roulette`): Random selection tool with customizable options
+14. **Lotto** (`/random/lotto`): Generate random lottery numbers
+
+#### Computer Tools
+15. **Sort** (`/computer/sort`): Sort algorithms visualizer and tool
+16. **Encoding** (`/computer/encoding`): Encode/decode text in various formats (Base64, URL, etc.)
+17. **Base Converter** (`/computer/base-converter`): Convert numbers between different bases (binary, decimal, hex, etc.)
+18. **CIDR** (`/computer/cidr`): CIDR notation calculator for network subnetting
 
 ### Styling System
 - **Tailwind CSS v4**: Uses new CSS-first approach with `@import "tailwindcss"`
@@ -39,9 +61,10 @@ The application provides developer utility tools:
 - **Custom Animations**: Includes shake animation for timer completion
 
 ### Navigation & Layout
-- **Sidebar Navigation**: Collapsible sidebar with categorized tool navigation using Radix UI
+- **Sidebar Navigation**: Collapsible sidebar with categorized tool navigation using Radix UI (max-height increased to 500px to accommodate all menu items)
 - **Header**: Breadcrumb navigation with theme toggle
 - **Responsive**: Mobile-friendly layout with proper responsive grid systems
+- **Dashboard**: Category-based tool overview with stats and quick access cards
 
 ### Key Dependencies
 - **UI Components**: Radix UI primitives, shadcn/ui components, Lucide React icons
@@ -77,9 +100,16 @@ As defined in `components.json`:
 - **Notifications**: Timer uses browser Notification API with permission handling
 - **Clipboard API**: Copy functionality with fallback for older browsers
 - **Debouncing**: Input validation uses 300ms debounce for performance
+- **Visual Feedback**: Tools like Unique feature progress bars and statistics cards for better UX
+- **Real-time Processing**: Most tools process input in real-time with useEffect hooks
 
 ## CSS 컴포넌트 규칙
 
 - CSS 컴포넌트가 필요하면 Shadcn 의 컴포넌트를 사용한다
 - 컴포넌트를 추가하는 방법은 `npx shadcn@latest add 컴포넌트명` 으로 추가한다
 - 기존 컴포넌트 스타일과 일관성을 유지하고 "new-york" 스타일을 따른다
+
+## 작업 시 챙길 부분
+
+- npm run dev 커맨드를 사용해서 확인해볼 필요 없음
+- 새로운 페이지가 추가 될 경우 Dashboard 와 도구 검색에도 반영 시키기 

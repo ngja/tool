@@ -93,6 +93,11 @@ const categories: Category[] = [
         url: "/string/extractor",
       },
       {
+        title: "Unique",
+        description: "중복 제거 및 요소별 카운트",
+        url: "/string/unique",
+      },
+      {
         title: "Set Operations",
         description: "집합 연산",
         url: "/string/set-operations",
