@@ -91,6 +91,10 @@ const items: MenuItem[] = [
         url: "/string/extractor",
       },
       {
+        title: "Unique",
+        url: "/string/unique",
+      },
+      {
         title: "Set Operations",
         url: "/string/set-operations",
       },
@@ -183,7 +187,7 @@ export function AppSidebar() {
                           }`} />
                         </SidebarMenuButton>
                       </CollapsibleTrigger>
-                      <CollapsibleContent className="overflow-hidden transition-all duration-300 ease-in-out data-[state=closed]:max-h-0 data-[state=open]:max-h-40">
+                      <CollapsibleContent className="overflow-hidden transition-all duration-300 ease-in-out data-[state=closed]:max-h-0 data-[state=open]:max-h-[500px]">
                         <SidebarMenuSub className="mt-1 transition-opacity duration-200 ease-in-out data-[state=closed]:opacity-0 data-[state=open]:opacity-100">
                           {item.items.map((subItem) => (
                             <SidebarMenuSubItem key={subItem.title}>

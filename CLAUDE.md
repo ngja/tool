@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## 확인사항
+
+- npm run dev 커맨드를 사용해서 확인해볼 필요 없음
+
 ## Project Overview
 
 This is a Next.js 15.5.4 application using React 19 and TypeScript, configured with Turbopack for enhanced development performance. The project is a developer utility app that provides various tools including JSON formatting, time conversion, and timer functionality. The UI is built with Tailwind CSS v4 and shadcn/ui components.
