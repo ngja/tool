@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Clock, Braces, ChevronRight, Wrench, Type, Dices, Cpu } from "lucide-react"
+import { Clock, Braces, ChevronRight, Wrench, Type, Dices, Cpu, Users } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -136,6 +136,16 @@ const items: MenuItem[] = [
       },
     ],
   },
+  {
+    title: "Collaboration",
+    icon: Users,
+    items: [
+      {
+        title: "Planning Poker",
+        url: "/collaboration/planning-poker",
+      },
+    ],
+  },
 ]
 
 export function AppSidebar() {
@@ -146,6 +156,7 @@ export function AppSidebar() {
     String: true,
     Random: true,
     Computer: true,
+    Collaboration: true,
   })
 
   const toggleDropdown = (title: string) => {
