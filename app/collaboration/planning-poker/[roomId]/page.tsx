@@ -10,7 +10,7 @@ import { triggerRandomConfetti } from "@/lib/utils/confetti"
 import { Room } from "./room"
 import { useMyPresence, useOthers, useStorage, useMutation } from "@/liveblocks.config"
 
-const FIBONACCI_DECK = ["0", "1", "2", "3", "5", "8", "13", "21", "34", "55", "89", "?", "☕"]
+const FIBONACCI_DECK = ["0.5", "1", "2", "3", "4", "5", "6", "7", "?", "☕"]
 
 function ClientSideRoom() {
     const [myPresence, updateMyPresence] = useMyPresence();
@@ -18,6 +18,7 @@ function ClientSideRoom() {
     const isRevealed = useStorage((root) => root.isRevealed);
     const [nameInput, setNameInput] = useState("");
     const [hasCheckedStorage, setHasCheckedStorage] = useState(false);
+    const [isDeckHidden, setIsDeckHidden] = useState(false);
 
     useEffect(() => {
         if (!hasCheckedStorage) {
@@ -35,6 +36,7 @@ function ClientSideRoom() {
     const handleCardClick = (card: string) => {
         if (isRevealed) return;
         updateMyPresence({ selectedCard: card });
+        setIsDeckHidden(true);
     }
 
     const handleReveal = useMutation(({ storage }) => {
@@ -51,6 +53,7 @@ function ClientSideRoom() {
     useEffect(() => {
         if (isRevealed === false) {
             updateMyPresence({ selectedCard: null });
+            setIsDeckHidden(false);
         }
     }, [isRevealed, updateMyPresence]);
 
@@ -119,177 +122,196 @@ function ClientSideRoom() {
     }
 
     return (
-        <div className="container mx-auto p-4 md:p-8 max-w-5xl space-y-8">
-            <div className="space-y-2">
-                <h1 className="text-3xl font-bold tracking-tight">Planning Poker</h1>
-                <p className="text-muted-foreground flex items-center justify-between">
-                    <span>Select a card to estimate the effort. Reveal when ready.</span>
-                    <span className="text-sm bg-primary/10 text-primary px-3 py-1 rounded-full">
-                        {others.length + 1} User(s) in Room
-                    </span>
-                </p>
-            </div>
+        <div className="container mx-auto p-4 md:p-8 max-w-5xl flex flex-col min-h-[calc(100vh-5rem)]">
+            <div className="flex-1 space-y-8 pb-8">
+                <div className="space-y-2">
+                    <h1 className="text-3xl font-bold tracking-tight">Planning Poker</h1>
+                    <p className="text-muted-foreground flex items-center justify-between">
+                        <span>Select a card to estimate the effort. Reveal when ready.</span>
+                        <span className="text-sm bg-primary/10 text-primary px-3 py-1 rounded-full">
+                            {others.length + 1} User(s) in Room
+                        </span>
+                    </p>
+                </div>
 
-            <div className="flex flex-col gap-8">
-                {/* Play Area */}
-                <div className="space-y-4">
-                    {/* Action Buttons Header */}
-                    <div className="flex gap-4 p-4 bg-muted/30 rounded-xl justify-between items-center min-h-[72px]">
-                        <div className="flex-1 flex items-center gap-6 overflow-x-auto">
-                            {isRevealed && allSelectedCards.length > 0 && (
-                                <>
-                                    {average !== null && (
-                                        <div className="flex flex-col shrink-0">
-                                            <span className="text-muted-foreground text-xs uppercase font-semibold tracking-wider">Average</span>
-                                            <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60">{average}</span>
-                                        </div>
-                                    )}
-                                    <div className={`flex gap-2 items-center flex-wrap ${average !== null ? 'border-l pl-6' : ''}`}>
-                                        {Object.entries(cardCounts)
-                                            .sort((a, b) => b[1] - a[1])
-                                            .map(([card, count]) => (
-                                                <div key={card} className="flex items-center bg-background rounded-md border shadow-sm overflow-hidden shrink-0">
-                                                    <div className="bg-primary/10 text-primary px-3 py-1 font-bold border-r">{card}</div>
-                                                    <div className="px-3 py-1 text-muted-foreground font-medium text-sm">
-                                                        {count} {count === 1 ? 'vote' : 'votes'}
-                                                    </div>
-                                                </div>
-                                            ))}
-                                    </div>
-                                </>
-                            )}
-                            {isRevealed && allSelectedCards.length === 0 && (
-                                <span className="text-muted-foreground text-sm font-medium">No cards were selected this round.</span>
-                            )}
-                        </div>
-                        <Button
-                            onClick={isRevealed ? handleNextRound : handleReveal}
-                            disabled={!isRevealed && others.every(o => !o.presence.selectedCard) && !selectedCard}
-                            className="w-32"
-                            variant={isRevealed ? "outline" : "default"}
-                        >
-                            {isRevealed ? (
-                                <>
-                                    <RotateCcw className="w-4 h-4 mr-2" />
-                                    Next Round
-                                </>
-                            ) : (
-                                <>
-                                    <Eye className="w-4 h-4 mr-2" />
-                                    Reveal
-                                </>
-                            )}
-                        </Button>
-                    </div>
-
-                    <Card className="p-8 min-h-[400px] border-dashed grid grid-cols-2 md:grid-cols-3 gap-6 place-items-center bg-muted/10">
-                        {/* Render My Card */}
-                        <div className="flex flex-col items-center gap-2">
-                            <div
-                                className={`w-32 h-48 rounded-xl border-4 flex items-center justify-center transition-all duration-500 transform ${!selectedCard ? "border-dashed border-muted-foreground/30" :
-                                    isRevealed ? "rotate-y-0 bg-primary border-primary text-primary-foreground shadow-xl" : "rotate-y-180 bg-muted border-border shadow-md"
-                                    }`}
-                                style={{ perspective: "1000px", transformStyle: "preserve-3d" }}
-                            >
-                                {selectedCard ? (
+                <div className="flex flex-col gap-8">
+                    {/* Play Area */}
+                    <div className="space-y-4">
+                        {/* Action Buttons Header */}
+                        <div className="flex gap-4 p-4 bg-muted/30 rounded-xl justify-between items-center min-h-[72px]">
+                            <div className="flex-1 flex items-center gap-6 overflow-x-auto">
+                                {isRevealed && allSelectedCards.length > 0 && (
                                     <>
-                                        <div className={`text-5xl font-bold transition-opacity duration-300 ${isRevealed ? 'opacity-100' : 'opacity-0'}`}>
-                                            {selectedCard}
-                                        </div>
-                                        {!isRevealed && (
-                                            <div className="absolute inset-0 flex items-center justify-center opacity-100 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+CgkJPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBmaWxsPSJ0cmFuc3BhcmVudCI+PC9yZWN0PgoJCTxwYXRoIGQ9Ik0wIDIwIEwyMCA0MCBMNDAgMjAgTDIwIDAgWiIgZmlsbD0icmdiYSg1MCw1MCw1MCwwLjEpIj48L3BhdGg+Cgk8L3N2Z24=')] rounded-lg [transform:rotateY(180deg)]">
-                                                <span className="text-muted-foreground font-semibold text-sm">SELECTED</span>
+                                        {average !== null && (
+                                            <div className="flex flex-col shrink-0">
+                                                <span className="text-muted-foreground text-xs uppercase font-semibold tracking-wider">Average</span>
+                                                <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60">{average}</span>
                                             </div>
                                         )}
-                                    </>
-                                ) : (
-                                    isRevealed ? (
-                                        <div className="flex flex-col items-center gap-2 opacity-50">
-                                            <span className="text-3xl">🫥</span>
-                                            <p className="text-muted-foreground text-sm font-medium">Not Selected</p>
+                                        <div className={`flex gap-2 items-center flex-wrap ${average !== null ? 'border-l pl-6' : ''}`}>
+                                            {Object.entries(cardCounts)
+                                                .sort((a, b) => b[1] - a[1])
+                                                .map(([card, count]) => (
+                                                    <div key={card} className="flex items-center bg-background rounded-md border shadow-sm overflow-hidden shrink-0">
+                                                        <div className="bg-primary/10 text-primary px-3 py-1 font-bold border-r">{card}</div>
+                                                        <div className="px-3 py-1 text-muted-foreground font-medium text-sm">
+                                                            {count} {count === 1 ? 'vote' : 'votes'}
+                                                        </div>
+                                                    </div>
+                                                ))}
                                         </div>
-                                    ) : (
-                                        <p className="text-muted-foreground text-sm font-medium">Waiting</p>
-                                    )
+                                    </>
+                                )}
+                                {isRevealed && allSelectedCards.length === 0 && (
+                                    <span className="text-muted-foreground text-sm font-medium">No cards were selected this round.</span>
                                 )}
                             </div>
-                            <span className="font-medium text-sm">{myPresence.name || "You"}</span>
+                            <Button
+                                onClick={isRevealed ? handleNextRound : handleReveal}
+                                disabled={!isRevealed && others.every(o => !o.presence.selectedCard) && !selectedCard}
+                                className="w-32"
+                                variant={isRevealed ? "outline" : "default"}
+                            >
+                                {isRevealed ? (
+                                    <>
+                                        <RotateCcw className="w-4 h-4 mr-2" />
+                                        Next Round
+                                    </>
+                                ) : (
+                                    <>
+                                        <Eye className="w-4 h-4 mr-2" />
+                                        Reveal
+                                    </>
+                                )}
+                            </Button>
                         </div>
 
-                        {/* Render Other Users' Cards */}
-                        {others.map((other) => {
-                            const hasSelected = !!other.presence.selectedCard;
-                            return (
-                                <div key={other.connectionId} className="flex flex-col items-center gap-2">
-                                    <div
-                                        className={`w-32 h-48 rounded-xl border-4 flex items-center justify-center transition-all duration-500 transform ${!hasSelected ? "border-dashed border-muted-foreground/30" :
-                                            isRevealed ? "rotate-y-0 bg-secondary border-secondary-foreground/20 text-secondary-foreground shadow-xl" : "rotate-y-180 bg-muted border-border shadow-md"
-                                            }`}
-                                        style={{ perspective: "1000px", transformStyle: "preserve-3d" }}
-                                    >
-                                        {hasSelected ? (
-                                            <>
-                                                <div className={`text-5xl font-bold transition-opacity duration-300 ${isRevealed ? 'opacity-100' : 'opacity-0'}`}>
-                                                    {other.presence.selectedCard}
+                        <Card className="p-6 md:p-8 min-h-[400px] max-h-[60vh] overflow-y-auto border-dashed grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 items-start justify-items-center content-start bg-muted/10">
+                            {/* Render My Card */}
+                            <div className="flex flex-col items-center gap-2">
+                                <div
+                                    className={`w-32 h-48 rounded-xl border-4 flex items-center justify-center transition-all duration-500 transform ${!selectedCard ? "border-dashed border-muted-foreground/30" :
+                                        isRevealed ? "rotate-y-0 bg-primary border-primary text-primary-foreground shadow-xl" : "rotate-y-180 bg-muted border-border shadow-md"
+                                        }`}
+                                    style={{ perspective: "1000px", transformStyle: "preserve-3d" }}
+                                >
+                                    {selectedCard ? (
+                                        <>
+                                            <div className={`text-5xl font-bold transition-opacity duration-300 ${isRevealed ? 'opacity-100' : 'opacity-0'}`}>
+                                                {selectedCard}
+                                            </div>
+                                            {!isRevealed && (
+                                                <div className="absolute inset-0 flex items-center justify-center opacity-100 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+CgkJPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBmaWxsPSJ0cmFuc3BhcmVudCI+PC9yZWN0PgoJCTxwYXRoIGQ9Ik0wIDIwIEwyMCA0MCBMNDAgMjAgTDIwIDAgWiIgZmlsbD0icmdiYSg1MCw1MCw1MCwwLjEpIj48L3BhdGg+Cgk8L3N2Z24=')] rounded-lg [transform:rotateY(180deg)]">
+                                                    <span className="text-muted-foreground font-semibold text-sm">SELECTED</span>
                                                 </div>
-                                                {!isRevealed && (
-                                                    <div className="absolute inset-0 flex items-center justify-center opacity-100 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+CgkJPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBmaWxsPSJ0cmFuc3BhcmVudCI+PC9yZWN0PgoJCTxwYXRoIGQ9Ik0wIDIwIEwyMCA0MCBMNDAgMjAgTDIwIDAgWiIgZmlsbD0icmdiYSg1MCw1MCw1MCwwLjEpIj48L3BhdGg+Cgk8L3N2Zz4=')] rounded-lg [transform:rotateY(180deg)]">
-                                                        <span className="text-muted-foreground font-semibold text-sm">SELECTED</span>
-                                                    </div>
-                                                )}
-                                            </>
+                                            )}
+                                        </>
+                                    ) : (
+                                        isRevealed ? (
+                                            <div className="flex flex-col items-center gap-2 opacity-50">
+                                                <span className="text-3xl">🫥</span>
+                                                <p className="text-muted-foreground text-sm font-medium">Not Selected</p>
+                                            </div>
                                         ) : (
-                                            isRevealed ? (
-                                                <div className="flex flex-col items-center gap-2 opacity-50">
-                                                    <span className="text-3xl">🫥</span>
-                                                    <p className="text-muted-foreground text-sm font-medium">Not Selected</p>
-                                                </div>
-                                            ) : (
-                                                <p className="text-muted-foreground text-sm font-medium">Waiting</p>
-                                            )
-                                        )}
-                                    </div>
-                                    <span className="font-medium text-sm text-muted-foreground">{other.presence.name || `User ${other.connectionId}`}</span>
+                                            <p className="text-muted-foreground text-sm font-medium">Waiting</p>
+                                        )
+                                    )}
                                 </div>
-                            )
-                        })}
-
-                        {others.length === 0 && (
-                            <div className="col-span-1 md:col-span-2 flex flex-col items-center justify-center text-muted-foreground opacity-50 p-8 text-center border-2 border-dashed rounded-xl h-full w-full max-w-[200px]">
-                                <p className="text-sm">Waiting for others to join...</p>
+                                <span className="font-medium text-sm">{myPresence.name || "You"}</span>
                             </div>
-                        )}
-                    </Card>
-                </div>
 
-                {/* Deck Area - Now constrained and below the play area */}
-                <div className="flex flex-col max-w-3xl mx-auto w-full">
-                    <h3 className="text-lg font-semibold mb-4 text-center md:text-left">Card Deck</h3>
-                    <Card className="flex-1 p-6 bg-muted/30">
-                        <div className="flex flex-wrap items-center justify-center gap-3">
-                            {FIBONACCI_DECK.map((card) => {
-                                const isSelected = selectedCard === card
+                            {/* Render Other Users' Cards */}
+                            {others.map((other) => {
+                                const hasSelected = !!other.presence.selectedCard;
                                 return (
-                                    <button
-                                        key={card}
-                                        onClick={() => handleCardClick(card)}
-                                        disabled={isRevealed === true}
-                                        className={`
-                                            relative group h-24 w-16 md:h-32 md:w-20 lg:h-36 lg:w-24 rounded-lg border-2 flex items-center justify-center text-xl md:text-2xl font-bold transition-all flex-shrink-0
-                                            ${isSelected
-                                                ? "border-primary bg-primary/10 text-primary -translate-y-2 shadow-md"
-                                                : "border-border bg-card hover:border-primary/50 hover:-translate-y-1 hover:shadow-sm"
-                                            }
-                                            ${isRevealed ? "opacity-50 cursor-not-allowed transform-none" : "cursor-pointer"}
-                                        `}
-                                    >
-                                        {card}
-                                    </button>
+                                    <div key={other.connectionId} className="flex flex-col items-center gap-2">
+                                        <div
+                                            className={`w-32 h-48 rounded-xl border-4 flex items-center justify-center transition-all duration-500 transform ${!hasSelected ? "border-dashed border-muted-foreground/30" :
+                                                isRevealed ? "rotate-y-0 bg-secondary border-secondary-foreground/20 text-secondary-foreground shadow-xl" : "rotate-y-180 bg-muted border-border shadow-md"
+                                                }`}
+                                            style={{ perspective: "1000px", transformStyle: "preserve-3d" }}
+                                        >
+                                            {hasSelected ? (
+                                                <>
+                                                    <div className={`text-5xl font-bold transition-opacity duration-300 ${isRevealed ? 'opacity-100' : 'opacity-0'}`}>
+                                                        {other.presence.selectedCard}
+                                                    </div>
+                                                    {!isRevealed && (
+                                                        <div className="absolute inset-0 flex items-center justify-center opacity-100 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+CgkJPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBmaWxsPSJ0cmFuc3BhcmVudCI+PC9yZWN0PgoJCTxwYXRoIGQ9Ik0wIDIwIEwyMCA0MCBMNDAgMjAgTDIwIDAgWiIgZmlsbD0icmdiYSg1MCw1MCw1MCwwLjEpIj48L3BhdGg+Cgk8L3N2Zz4=')] rounded-lg [transform:rotateY(180deg)]">
+                                                            <span className="text-muted-foreground font-semibold text-sm">SELECTED</span>
+                                                        </div>
+                                                    )}
+                                                </>
+                                            ) : (
+                                                isRevealed ? (
+                                                    <div className="flex flex-col items-center gap-2 opacity-50">
+                                                        <span className="text-3xl">🫥</span>
+                                                        <p className="text-muted-foreground text-sm font-medium">Not Selected</p>
+                                                    </div>
+                                                ) : (
+                                                    <p className="text-muted-foreground text-sm font-medium">Waiting</p>
+                                                )
+                                            )}
+                                        </div>
+                                        <span className="font-medium text-sm text-muted-foreground">{other.presence.name || `User ${other.connectionId}`}</span>
+                                    </div>
                                 )
                             })}
-                        </div>
-                    </Card>
+
+                            {others.length === 0 && (
+                                <div className="col-span-1 md:col-span-2 flex flex-col items-center justify-center text-muted-foreground opacity-50 p-8 text-center border-2 border-dashed rounded-xl h-full w-full max-w-[200px]">
+                                    <p className="text-sm">Waiting for others to join...</p>
+                                </div>
+                            )}
+                        </Card>
+                    </div>
+
                 </div>
+            </div>
+
+            {/* Deck Area - Sticky to bottom */}
+            <div className="sticky bottom-0 md:bottom-6 w-full bg-background/80 backdrop-blur-md border-t md:border border-border/50 md:rounded-2xl z-50 p-2 pt-1 sm:p-4 sm:pt-2 shadow-[0_-10px_40px_-20px_rgba(0,0,0,0.1)] pb-safe transition-all overflow-hidden">
+                {isDeckHidden && selectedCard && !isRevealed ? (
+                    <div key="hidden-state" className="flex flex-col w-full animate-in fade-in zoom-in-95 duration-300 ease-out fill-mode-both">
+                        <div className="flex px-2 pt-3 sm:pt-4 pb-2 sm:pb-0">
+                            <div 
+                                className="w-full h-16 sm:h-20 md:h-24 lg:h-28 flex flex-col items-center justify-center cursor-pointer hover:bg-primary/10 rounded-xl transition-all border-2 border-dashed border-primary/40 bg-primary/5"
+                                onClick={() => setIsDeckHidden(false)}
+                            >
+                                <div className="flex items-center gap-2 text-primary">
+                                    <span className="text-xl sm:text-2xl">🔒</span>
+                                    <span className="font-semibold text-sm sm:text-base md:text-lg">Card Selected & Hidden</span>
+                                </div>
+                                <p className="text-xs md:text-sm text-muted-foreground mt-1 text-center hidden md:block">Your choice is hidden to protect against screen sharing. Click here to change your card.</p>
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    <div key="visible-state" className="flex flex-col w-full animate-in fade-in zoom-in-95 duration-300 ease-out fill-mode-both">
+                        <div className="flex flex-nowrap sm:flex-wrap items-center justify-start sm:justify-center gap-2 overflow-x-auto px-2 pt-3 sm:pt-4 pb-2 sm:pb-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                            {FIBONACCI_DECK.map((card) => {
+                            const isSelected = selectedCard === card
+                            return (
+                                <button
+                                    key={card}
+                                    onClick={() => handleCardClick(card)}
+                                    disabled={isRevealed === true}
+                                    className={`
+                                        relative group h-16 w-12 sm:h-20 sm:w-14 md:h-24 md:w-16 lg:h-28 lg:w-20 rounded-lg border-2 flex items-center justify-center text-lg md:text-2xl font-bold transition-transform flex-shrink-0
+                                        ${isSelected
+                                            ? "border-primary bg-primary/10 text-primary -translate-y-1 sm:-translate-y-2 shadow-md"
+                                            : "border-border bg-card hover:border-primary/50 hover:-translate-y-1 hover:shadow-sm"
+                                        }
+                                        ${isRevealed ? "opacity-50 cursor-not-allowed transform-none" : "cursor-pointer"}
+                                    `}
+                                >
+                                    {card}
+                                </button>
+                            )
+                        })}
+                    </div>
+                </div>
+                )}
             </div>
         </div>
     )

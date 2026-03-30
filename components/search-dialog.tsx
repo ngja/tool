@@ -19,7 +19,7 @@ type SearchContextType = {
 
 const SearchContext = createContext<SearchContextType>({
   open: false,
-  setOpen: () => {},
+  setOpen: () => { },
 })
 
 export const useSearch = () => useContext(SearchContext)
@@ -62,6 +62,9 @@ const tools: Tool[] = [
   { title: "Encoding", description: "인코딩/디코딩", url: "/computer/encoding", category: "Computer", icon: Cpu },
   { title: "Base Converter", description: "진법 변환", url: "/computer/base-converter", category: "Computer", icon: Cpu },
   { title: "CIDR", description: "CIDR 계산기", url: "/computer/cidr", category: "Computer", icon: Cpu },
+
+  // Collaboration
+  { title: "Planning Poker", description: "협업을 위한 플래닝 포커", url: "/collaboration/planning-poker", category: "Collaboration", icon: Cpu },
 ]
 
 export function SearchProvider({ children }: { children: React.ReactNode }) {
