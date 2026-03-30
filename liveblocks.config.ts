@@ -26,11 +26,17 @@ export type Storage = {
     isRevealed: boolean;
 };
 
+export type RoomEvent = {
+    type: "NUDGE";
+};
+
 // Export the Typed Hooks for our React components
 export const {
     useMyPresence,
     useOthers,
     useStorage,
     useMutation,
+    useBroadcastEvent,
+    useEventListener,
     RoomProvider,
-} = createRoomContext<Presence, Storage>(client);
+} = createRoomContext<Presence, Storage, any, RoomEvent>(client);
